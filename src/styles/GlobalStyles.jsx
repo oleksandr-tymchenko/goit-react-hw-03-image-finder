@@ -32,6 +32,7 @@ export const GlobalStyles = css`
   ol {
     padding-left: 0;
     margin: 0;
+    list-style: none;
   }
 
   button {

@@ -2,17 +2,30 @@ import { Component } from 'react';
 // import ContactForm from './ContactForm/ContactForm';
 import { nanoid } from 'nanoid';
 import { Container } from './App.styled';
+import Skeleton from './Skeleton/Skeleton';
+import SearchBar from './SearchBar/SearchBar';
+import { getImages } from 'servises/api';
+import ImageGalery from './ImageGallery/ImageGallery';
+import { ImageGaleryItem } from './ImageGalleryItem/ImageGalleryItem';
 
 // import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 class App extends Component {
   state = {
-    contacts: [],
-    filter: '',
+    searchQuery: 'sun',
+
+    // filter: '',
+    // isLoading: false,
   };
 
   // /----------------------
-  componentDidMount() {}
+  // async componentDidMount() {
+  //   const data = await getImages();
+  //   const images = data.hits;
+
+  //   await this.setState({ images, isLoading: false });
+  //   console.log(this.state);
+  // }
   componentDidUpdate(_, prevState) {}
   // -----------------------------
 
@@ -52,12 +65,19 @@ class App extends Component {
 
   //  --------------------------------
   render() {
+    const { searchQuery } = this.state;
+
     // const { filter } = this.state;
 
     // const visibleContacts = this.getVisibleContacts();
 
     return (
       <Container>
+        <SearchBar />
+
+        {/* <Skeleton /> */}
+        <ImageGalery q={searchQuery} />
+
         {/* <Title1>Phonebook</Title1>
         <ContactForm data={this.handleSubmit} />
         <Title2>Contacts</Title2>
