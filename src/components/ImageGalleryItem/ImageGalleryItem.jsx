@@ -1,8 +1,10 @@
+import { ImgGalleryItem, ImgGalleryItemImage } from './ImageGalleryItem.styled';
+
 export const ImageGaleryItem = ({ itemId, imgUrl }) => {
   return (
-    <li key={itemId} className="gallery-item">
-      <img src={imgUrl} alt="{imgName}" />
-    </li>
+    <ImgGalleryItem key={itemId} className="gallery-item">
+      <ImgGalleryItemImage src={imgUrl} alt="{imgName}" />
+    </ImgGalleryItem>
   );
 };
 

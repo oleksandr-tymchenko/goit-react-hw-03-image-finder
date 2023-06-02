@@ -3,6 +3,8 @@ import Skeleton from 'components/Skeleton/Skeleton';
 import { getImages } from 'servises/api';
 import { ImageGaleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
+import { ImgGallery } from './ImageGallery.styled';
+import ErrorMessage from 'components/ErrorMessage/ErrorMessage';
 const STATUS = {
   IDLE: 'idle',
   PENDING: 'pending',
@@ -20,13 +22,59 @@ export default class ImageGalery extends Component {
     per_page: 12,
   };
 
-  async componentDidMount() {
-    const data = await getImages();
-    const images = data.hits;
-
-    await this.setState({ images, isLoading: false });
-    console.log(this.state);
+  componentDidMount() {
+    this.fetchImages();
   }
+
+  async componentDidUpdate(prevProps, prevState) {
+    const { searchQuery } = this.props;
+    const { page } = this.state;
+    if (prevProps.searchQuery !== searchQuery) {
+      await this.setState({ page: 1, images: [] });
+      this.fetchImages();
+    }
+    if (prevState.page !== page) {
+      this.fetchImages();
+    }
+  }
+
+  fetchImages = async () => {
+    const { searchQuery } = this.props;
+    console.log('searchQuery in img', searchQuery);
+    const { images, per_page, page } = this.state;
+    await this.setState({ status: STATUS.PENDING });
+    try {
+      const data = await getImages({ searchQuery, page });
+      console.log('data', data);
+      const newImages = data.hits;
+      if (!newImages.length) {
+        throw new Error('No matches found');
+      }
+      this.setState(state => ({
+        images: [...images, ...newImages],
+        totalPages: Math.ceil(data.total / per_page),
+        status: STATUS.RESOLVED,
+        error: null,
+      }));
+    } catch (error) {
+      this.setState({ error: error.message, status: STATUS.REJECTED });
+    }
+  };
+
+  // addImages = async values => {
+  //   try {
+  //     const newData = await getImages(values);
+  //     const NewImages = newData.hits;
+  //     this.setState(state => ({
+  //       images: [...state.images, ...NewImages],
+  //     }));
+  //   } catch (error) {
+  //     this.setState({ error: true, isLoading: false });
+
+  //     console.log(error);
+  //   }
+  // };
+
   //   componentDiddMount() {
   //     this.fetchImages();
   //   }
@@ -51,20 +99,45 @@ export default class ImageGalery extends Component {
   //     });
   //   };
 
+  handleLoadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+    console.log('this.state', this.state);
+  };
+
   render() {
-    const { images } = this.state;
-    return (
-      <ul className="gallery">
-        {images.map(({ id, webformatURL }) => {
-          return (
-            <ImageGaleryItem
-              itemId={id}
-              imgUrl={webformatURL}
-              ImgName="{tag}"
-            />
-          );
-        })}
-      </ul>
-    );
+    const { status, images, error, page, totalPages } = this.state;
+    const showLoadMoreBtn = images.length !== 0 && page < totalPages;
+
+    if (status === STATUS.PENDING) {
+      return <Skeleton />;
+    }
+    if (status === STATUS.RESOLVED) {
+      return (
+        <ImgGallery>
+          {images.map(({ id, webformatURL }) => {
+            return (
+              <ImageGaleryItem
+                itemId={id}
+                imgUrl={webformatURL}
+                ImgName="{tag}"
+              />
+            );
+          })}
+
+          {showLoadMoreBtn && (
+            <button
+              onClick={this.handleLoadMore}
+              disabled={status === STATUS.PENDING ? true : false}
+            >
+              {status === STATUS.PENDING ? 'Loading...' : 'Load More'}
+            </button>
+          )}
+        </ImgGallery>
+      );
+    }
+
+    if (status === STATUS.REJECTED) {
+      return <ErrorMessage>{error}</ErrorMessage>;
+    }
   }
 }

@@ -1,32 +1,43 @@
 import { Component } from 'react';
 // import ContactForm from './ContactForm/ContactForm';
-import { nanoid } from 'nanoid';
+
 import { Container } from './App.styled';
-import Skeleton from './Skeleton/Skeleton';
-import SearchBar from './SearchBar/SearchBar';
-import { getImages } from 'servises/api';
+// import Skeleton from './Skeleton/Skeleton';
+// import { SearchBar } from './SearchBar/SearchBar';
+// import { getImages } from 'servises/api';
 import ImageGalery from './ImageGallery/ImageGallery';
-import { ImageGaleryItem } from './ImageGalleryItem/ImageGalleryItem';
+// import { ImageGaleryItem } from './ImageGalleryItem/ImageGalleryItem';
+import { SearchBar } from './SearchBar/SearcBar';
 
 // import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 class App extends Component {
   state = {
-    searchQuery: 'sun',
+    searchQuery: '',
 
     // filter: '',
     // isLoading: false,
   };
 
-  // /----------------------
+  handleSearchQuery = searchQuery => {
+    this.setState({
+      searchQuery,
+    });
+  };
+  // // /----------------------
   // async componentDidMount() {
-  //   const data = await getImages();
+  //   const { searchQuery } = this.state;
+  //   const data = await getImages({ searchQuery });
   //   const images = data.hits;
 
   //   await this.setState({ images, isLoading: false });
   //   console.log(this.state);
   // }
-  componentDidUpdate(_, prevState) {}
+  // componentDidUpdate(_, prevState) {
+  //   if (prevState.searchQuery !== this.state.searchQuery) {
+  //     console.log('update');
+  //   }
+  // }
   // -----------------------------
 
   // handleSubmit = (values, { resetForm }) => {
@@ -73,10 +84,13 @@ class App extends Component {
 
     return (
       <Container>
-        <SearchBar />
+        <SearchBar
+          searchQuery={searchQuery}
+          onSubmit={this.handleSearchQuery}
+        />
 
         {/* <Skeleton /> */}
-        <ImageGalery q={searchQuery} />
+        <ImageGalery searchQuery={searchQuery} />
 
         {/* <Title1>Phonebook</Title1>
         <ContactForm data={this.handleSubmit} />

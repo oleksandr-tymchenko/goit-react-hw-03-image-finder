@@ -2,9 +2,14 @@ import styled from '@emotion/styled';
 
 export const Container = styled.div`
   /* max-width: 800px; */
-  margin-left: auto;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 16px;
+  padding-bottom: 24px;
+  /* margin-left: auto;
   margin-right: auto;
-  padding: 15px;
+  padding: 15px; */
 `;
 
 export const Title1 = styled.h1`
