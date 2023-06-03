@@ -1,6 +1,6 @@
 import { SkeletonList, SkeletonCard } from './Skeleton.sryled';
 
-export default function Skeleton() {
+export const Skeleton = () => {
   return (
     <SkeletonList>
       {[...new Array(12)].map((el, index) => (
@@ -17,4 +17,4 @@ export default function Skeleton() {
       ))}
     </SkeletonList>
   );
-}
+};

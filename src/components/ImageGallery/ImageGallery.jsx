@@ -1,10 +1,13 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import Skeleton from 'components/Skeleton/Skeleton';
+import { Skeleton } from 'components/Skeleton/Skeleton';
 import { getImages } from 'servises/api';
 import { ImageGaleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
-
 import { ImgGallery } from './ImageGallery.styled';
-import ErrorMessage from 'components/ErrorMessage/ErrorMessage';
+import { ErrorMessage } from 'components/ErrorMessage/ErrorMessage';
+import { Button } from 'components/Button/Button';
+import Modal from 'components/Modal/Modal';
+
 const STATUS = {
   IDLE: 'idle',
   PENDING: 'pending',
@@ -20,10 +23,12 @@ export default class ImageGalery extends Component {
     page: 1,
     totalPages: 0,
     per_page: 12,
+    showModal: false,
+    imageURL: '',
   };
 
   componentDidMount() {
-    this.fetchImages();
+    // this.fetchImages();
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -40,12 +45,11 @@ export default class ImageGalery extends Component {
 
   fetchImages = async () => {
     const { searchQuery } = this.props;
-    console.log('searchQuery in img', searchQuery);
     const { images, per_page, page } = this.state;
     await this.setState({ status: STATUS.PENDING });
     try {
       const data = await getImages({ searchQuery, page });
-      console.log('data', data);
+
       const newImages = data.hits;
       if (!newImages.length) {
         throw new Error('No matches found');
@@ -61,51 +65,28 @@ export default class ImageGalery extends Component {
     }
   };
 
-  // addImages = async values => {
-  //   try {
-  //     const newData = await getImages(values);
-  //     const NewImages = newData.hits;
-  //     this.setState(state => ({
-  //       images: [...state.images, ...NewImages],
-  //     }));
-  //   } catch (error) {
-  //     this.setState({ error: true, isLoading: false });
-
-  //     console.log(error);
-  //   }
-  // };
-
-  //   componentDiddMount() {
-  //     this.fetchImages();
-  //   }
-
-  //   fetchImages = async () => {
-  //     await console.log(getImages);
-  //     const { images, per_page, page } = this.state;
-  //     const { q } = this.props;
-  //     console.log(this.props);
-  //     await this.setState({ status: STATUS.PENDING });
-  //     const data = await getImages({
-  //       q,
-  //       per_page,
-  //       page,
-  //     });
-
-  //     this.setState({
-  //       images: [...images, ...data.images],
-  //       totalPages: Math.ceil(data.totalHits / per_page),
-  //       status: STATUS.RESOLVED,
-  //       error: null,
-  //     });
-  //   };
-
   handleLoadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
-    console.log('this.state', this.state);
+  };
+  toggleModal = () => {
+    this.setState(state => ({
+      showModal: !state.showModal,
+    }));
+  };
+
+  showLargeImage = async e => {
+    if (!this.state.showModal) {
+      const url = await e.target.dataset.large;
+      await this.setState({
+        imageURL: url,
+      });
+      this.toggleModal();
+    }
   };
 
   render() {
-    const { status, images, error, page, totalPages } = this.state;
+    const { status, images, error, page, totalPages, showModal, imageURL } =
+      this.state;
     const showLoadMoreBtn = images.length !== 0 && page < totalPages;
 
     if (status === STATUS.PENDING) {
@@ -113,26 +94,35 @@ export default class ImageGalery extends Component {
     }
     if (status === STATUS.RESOLVED) {
       return (
-        <ImgGallery>
-          {images.map(({ id, webformatURL }) => {
-            return (
-              <ImageGaleryItem
-                itemId={id}
-                imgUrl={webformatURL}
-                ImgName="{tag}"
-              />
-            );
-          })}
-
+        <>
+          <ImgGallery onClick={this.showLargeImage}>
+            {showModal && (
+              <Modal onClose={this.toggleModal}>
+                <img src={imageURL} alt="largeImg" />
+              </Modal>
+            )}
+            {images.map(({ id, webformatURL, tags, largeImageURL }, index) => {
+              return (
+                <div key={index}>
+                  <ImageGaleryItem
+                    // onClick={() => console.log('hi')}
+                    itemId={id}
+                    imgUrl={webformatURL}
+                    imgLargeUrl={largeImageURL}
+                    ImgName={tags}
+                  />
+                </div>
+              );
+            })}
+          </ImgGallery>
           {showLoadMoreBtn && (
-            <button
-              onClick={this.handleLoadMore}
-              disabled={status === STATUS.PENDING ? true : false}
-            >
-              {status === STATUS.PENDING ? 'Loading...' : 'Load More'}
-            </button>
+            <Button
+              stateStatus={status}
+              mashineStatus={STATUS}
+              loadingMore={this.handleLoadMore}
+            />
           )}
-        </ImgGallery>
+        </>
       );
     }
 
@@ -141,3 +131,12 @@ export default class ImageGalery extends Component {
     }
   }
 }
+
+ImageGalery.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      searchQuery: PropTypes.string.isRequired,
+      page: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+};

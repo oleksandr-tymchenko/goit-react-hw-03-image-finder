@@ -1,9 +1,14 @@
+import PropTypes from 'prop-types';
 import { ImgGalleryItem, ImgGalleryItemImage } from './ImageGalleryItem.styled';
 
-export const ImageGaleryItem = ({ itemId, imgUrl }) => {
+export const ImageGaleryItem = ({ itemId, imgUrl, ImgName, imgLargeUrl }) => {
   return (
-    <ImgGalleryItem key={itemId} className="gallery-item">
-      <ImgGalleryItemImage src={imgUrl} alt="{imgName}" />
+    <ImgGalleryItem key={itemId}>
+      <ImgGalleryItemImage
+        src={imgUrl}
+        data-large={imgLargeUrl}
+        alt={ImgName}
+      />
     </ImgGalleryItem>
   );
 };
@@ -32,3 +37,9 @@ export const ImageGaleryItem = ({ itemId, imgUrl }) => {
 //     </ul>
 //   );
 // };
+ImageGaleryItem.propTypes = {
+  itemId: PropTypes.string.isRequired,
+  imgUrl: PropTypes.string.isRequired,
+  ImgName: PropTypes.string.isRequired,
+  imgLargeUrl: PropTypes.string.isRequired,
+};

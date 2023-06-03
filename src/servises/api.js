@@ -1,38 +1,9 @@
-// import React, { Component } from 'react';
 import axios from 'axios';
 
 const API_KEY = '34527862-993120beb94eb9a2ced5c8bcb';
 const BASE_URL = 'https://pixabay.com/api/';
-// const queryParams = {
-//   q: '',
-//   image_type: 'photo',
-//   orientation: 'horizontal',
-//   per_page: 12,
-//   safesearch: true,
-//   page: null,
-// };
 
-// export default class GetImages extends Component {
-//   state = {
-//     q: 'erotic',
-//     image_type: 'photo',
-//     orientation: 'horizontal',
-//     per_page: 12,
-//     safesearch: true,
-//     page: 2,
-//   };
-//   async fetchImg() {
-//     const response = await axios.get(BASE_URL, {
-//       params: {
-//         ...this.state,
-//         key: API_KEY,
-//       },
-//     });
-//     const data = await response.data;
-//     return data;
-//   }
-// }
-export const getImages = async ({ searchQuery, newPage }) => {
+export const getImages = async ({ searchQuery, page }) => {
   const queryParams = {
     image_type: 'photo',
     orientation: 'horizontal',
@@ -41,8 +12,9 @@ export const getImages = async ({ searchQuery, newPage }) => {
     page: 1,
   };
   const query = Object.values({ searchQuery })[0];
+
   queryParams.q = query;
-  queryParams.page = { newPage };
+  queryParams.page = Object.values({ page })[0];
   console.log('queryParams', queryParams);
   const response = await axios.get(BASE_URL, {
     params: {
