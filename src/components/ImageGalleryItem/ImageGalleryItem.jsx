@@ -23,17 +23,7 @@ export const ImageGaleryItem = ({ itemId, imgUrl, ImgName, imgLargeUrl }) => {
 //           </li>
 //         );
 //       })}
-{
-  /* <li key="1" className="gallery-item">
-        <img src={imgUrl} alt={imgName} />
-      </li>
-      <li key="2" className="gallery-item">
-        <img src={imgUrl} alt={imgName} />
-      </li>
-      <li key="3" className="gallery-item">
-        <img src={imgUrl} alt={imgName} />
-      </li> */
-}
+
 //     </ul>
 //   );
 // };
