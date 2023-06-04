@@ -110,14 +110,12 @@ export default class ImageGalery extends Component {
             )}
             {images.map(({ id, webformatURL, tags, largeImageURL }, index) => {
               return (
-                <div key={index}>
-                  <ImageGaleryItem
-                    itemId={id}
-                    imgUrl={webformatURL}
-                    imgLargeUrl={largeImageURL}
-                    ImgName={tags}
-                  />
-                </div>
+                <ImageGaleryItem
+                  key={id}
+                  imgUrl={webformatURL}
+                  imgLargeUrl={largeImageURL}
+                  ImgName={tags}
+                />
               );
             })}
           </ImgGallery>
