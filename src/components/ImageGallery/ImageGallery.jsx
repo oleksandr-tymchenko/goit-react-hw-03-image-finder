@@ -35,20 +35,20 @@ export default class ImageGalery extends Component {
     const { searchQuery } = this.props;
     const { page } = this.state;
 
-    if (prevProps.searchQuery !== searchQuery || prevState.page !== page) {
-      await this.setState({ page: 1, images: [] });
-      this.fetchImages();
-    }
-    // if (prevState.page !== page) {
-    //   this.fetchImages();
-    // }
-    // if (prevProps.searchQuery !== searchQuery) {
+    // if (prevProps.searchQuery !== searchQuery || prevState.page !== page) {
     //   await this.setState({ page: 1, images: [] });
     //   this.fetchImages();
     // }
     // if (prevState.page !== page) {
     //   this.fetchImages();
     // }
+    if (prevProps.searchQuery !== searchQuery) {
+      await this.setState({ page: 1, images: [] });
+      this.fetchImages();
+    }
+    if (prevState.page !== page) {
+      this.fetchImages();
+    }
   }
 
   fetchImages = async () => {
