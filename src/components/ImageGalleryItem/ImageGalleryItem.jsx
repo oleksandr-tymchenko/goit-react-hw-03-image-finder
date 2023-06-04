@@ -13,22 +13,8 @@ export const ImageGaleryItem = ({ itemId, imgUrl, ImgName, imgLargeUrl }) => {
   );
 };
 
-// export const ImageGaleryItem = ({ data }) => {
-//   return (
-//     <ul>
-//       {data.map(({ id, imgUrl }) => {
-//         return (
-//           <li key={id} className="gallery-item">
-//             <img src={imgUrl} alt="{imgName}" width="300" />
-//           </li>
-//         );
-//       })}
-
-//     </ul>
-//   );
-// };
 ImageGaleryItem.propTypes = {
-  itemId: PropTypes.string.isRequired,
+  itemId: PropTypes.number.isRequired,
   imgUrl: PropTypes.string.isRequired,
   ImgName: PropTypes.string.isRequired,
   imgLargeUrl: PropTypes.string.isRequired,

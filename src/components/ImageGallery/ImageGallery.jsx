@@ -34,13 +34,21 @@ export default class ImageGalery extends Component {
   async componentDidUpdate(prevProps, prevState) {
     const { searchQuery } = this.props;
     const { page } = this.state;
-    if (prevProps.searchQuery !== searchQuery) {
-      await this.setState({ page: 1, images: [] });
+
+    if (prevProps.searchQuery !== searchQuery || prevState.page !== page) {
+      // await this.setState({ page: 1, images: [] });
       this.fetchImages();
     }
-    if (prevState.page !== page) {
-      this.fetchImages();
-    }
+    // if (prevState.page !== page) {
+    //   this.fetchImages();
+    // }
+    // if (prevProps.searchQuery !== searchQuery) {
+    //   await this.setState({ page: 1, images: [] });
+    //   this.fetchImages();
+    // }
+    // if (prevState.page !== page) {
+    //   this.fetchImages();
+    // }
   }
 
   fetchImages = async () => {
@@ -58,7 +66,6 @@ export default class ImageGalery extends Component {
         images: [...images, ...newImages],
         totalPages: Math.ceil(data.total / per_page),
         status: STATUS.RESOLVED,
-        error: null,
       }));
     } catch (error) {
       this.setState({ error: error.message, status: STATUS.REJECTED });
@@ -105,7 +112,6 @@ export default class ImageGalery extends Component {
               return (
                 <div key={index}>
                   <ImageGaleryItem
-                    // onClick={() => console.log('hi')}
                     itemId={id}
                     imgUrl={webformatURL}
                     imgLargeUrl={largeImageURL}
@@ -138,5 +144,5 @@ ImageGalery.propTypes = {
       searchQuery: PropTypes.string.isRequired,
       page: PropTypes.number.isRequired,
     })
-  ).isRequired,
+  ),
 };

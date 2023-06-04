@@ -15,10 +15,8 @@ const initialValue = {
 export const SearchBar = ({ onSubmit }) => {
   const handleSubmit = async (values, actions) => {
     await onSubmit(Object.values(values)[0]);
-    console.log(Object.values(values)[0]);
     actions.setSubmitting(false);
     actions.resetForm();
-    // resetForm();
   };
   return (
     <Formik initialValues={initialValue} onSubmit={handleSubmit}>
@@ -28,7 +26,6 @@ export const SearchBar = ({ onSubmit }) => {
             <SearchFormBtn type="submit" disabled={isSubmitting}>
               <SearchFormBtnLabel>Search</SearchFormBtnLabel>
             </SearchFormBtn>
-            {/* <label htmlFor="searchValue"></label> */}
             <SearchFormInput
               type="text"
               name="searchQuery"

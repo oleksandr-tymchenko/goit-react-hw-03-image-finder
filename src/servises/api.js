@@ -15,16 +15,11 @@ export const getImages = async ({ searchQuery, page }) => {
 
   queryParams.q = query;
   queryParams.page = Object.values({ page })[0];
-  console.log('queryParams', queryParams);
   const response = await axios.get(BASE_URL, {
     params: {
       ...queryParams,
       key: API_KEY,
     },
   });
-  // if (!response.ok) {
-  //   throw new Error('Smth went catch');
-  // }
   return await response.data;
-  // return data;
 };

@@ -14,5 +14,4 @@ export const Button = ({ stateStatus, mashineStatus, loadingMore }) => {
 Button.propTypes = {
   loadingMore: PropTypes.func,
   stateStatus: PropTypes.string.isRequired,
-  mashineStatus: PropTypes.string.isRequired,
 };
