@@ -36,7 +36,7 @@ export default class ImageGalery extends Component {
     const { page } = this.state;
 
     if (prevProps.searchQuery !== searchQuery || prevState.page !== page) {
-      // await this.setState({ page: 1, images: [] });
+      await this.setState({ page: 1, images: [] });
       this.fetchImages();
     }
     // if (prevState.page !== page) {
